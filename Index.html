@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>શ્રી રાધા કૃષ્ણ મંદિર - વાંકાનેર (બાવરી ફળિયું)</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #800020; /* Deep Maroon */
+            --secondary: #d4af37; /* Gold */
+            --bg: #fffbf2;
+            --text: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        header {
+            background: linear-gradient(135deg, #800020, #b30000);
+            color: #fff;
+            text-align: center;
+            padding: 2rem 1rem;
+            border-bottom: 5px solid var(--secondary);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: var(--secondary);
+        }
+
+        header p {
+            margin: 5px 0 0 0;
+            font-size: 1rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            border-left: 5px solid var(--primary);
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-top: 0;
+            border-bottom: 2px solid var(--bg);
+            padding-bottom: 8px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            color: white;
+        }
+
+        .income { background-color: #2e7d32; }
+        .expense { background-color: #c62828; }
+        .balance { background-color: #0277bd; }
+
+        .stat-box h3 { margin: 0; font-size: 0.9rem; }
+        .stat-box p { margin: 5px 0 0 0; font-size: 1.5rem; font-weight: bold; }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #600018;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .darshan-time {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: var(--primary);
+            color: white;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🚩 શ્રી રાધા કૃષ્ણ મંદિર 🚩</h1>
+    <p>વાંકાનેર - બાવરી ફળિયું</p>
+</header>
+
+<div class="container">
+
+    <!-- દર્શન સમય કાર્ડ -->
+    <div class="card">
+        <h2><i class="fas fa-clock"></i> આરતી તથા દર્શન સમય</h2>
+        <div class="darshan-time">
+            <div>
+                <strong>સવારની આરતી:</strong><br> સવારે ૦૬:૩૦ વાગ્યે
+            </div>
+            <div>
+                <strong>સાંજની આરતી:</strong><br> સાંજે ૦૭:૦૦ વાગ્યે
+            </div>
+        </div>
+    </div>
+
+    <!-- લાઈવ હિસાબ ડેશબોર્ડ -->
+    <div class="card">
+        <h2><i class="fas fa-calculator"></i> મંદિર લાઇવ હિસાબ ડેશબોર્ડ</h2>
+        
+        <div class="stats-grid">
+            <div class="stat-box income">
+                <h3>કુલ આવક (દાન/ફાળો)</h3>
+                <p id="totalIncome">₹0</p>
+            </div>
+            <div class="stat-box expense">
+                <h3>કુલ ખર્ચ</h3>
+                <p id="totalExpense">₹0</p>
+            </div>
+            <div class="stat-box balance">
+                <h3>બચત રકમ</h3>
+                <p id="netBalance">₹0</p>
+            </div>
+        </div>
+
+        <h3>નવી એન્ટ્રી ઉમેરો</h3>
+        <form id="entryForm">
+            <div class="form-group">
+                <label>પ્રકાર:</label>
+                <select id="type">
+                    <option value="income">આવક (દાન / ફાળો)</option>
+                    <option value="expense">ખર્ચ</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>વિગત / ભક્તનું નામ / વસ્તુ:</label>
+                <input type="text" id="description" placeholder="દા.ત. શ્રદ્ધાળુનું દાન અથવા આરતી સામાન" required>
+            </div>
+            <div class="form-group">
+                <label>રકમ (₹):</label>
+                <input type="number" id="amount" placeholder="રકમ લખો" required>
+            </div>
+            <button type="submit">એન્ટ્રી સેવ કરો</button>
+        </form>
+
+        <h3 style="margin-top: 25px;">તાજેતરના વ્યવહારો</h3>
+        <table id="transactionTable">
+            <thead>
+                <tr>
+                    <th>પ્રકાર</th>
+                    <th>વિગત</th>
+                    <th>રકમ (₹)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- ડેટા અહીં આવશે -->
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<footer>
+    <p>© શ્રી રાધા કૃષ્ણ મંદિર સેવા સમિતિ - બાવરી ફળિયું, વાંકાનેર</p>
+</footer>
+
+<script>
+    let transactions = JSON.parse(localStorage.getItem('rk_mandir_transactions')) || [];
+
+    const form = document.getElementById('entryForm');
+    const tableBody = document.querySelector('#transactionTable tbody');
+
+    function updateDashboard() {
+        let income = 0;
+        let expense = 0;
+
+        tableBody.innerHTML = '';
+
+        transactions.forEach((item) => {
+            if(item.type === 'income') income += item.amount;
+            if(item.type === 'expense') expense += item.amount;
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td style="color: ${item.type === 'income' ? 'green' : 'red'}; font-weight: bold;">
+                    ${item.type === 'income' ? 'આવક' : 'ખર્ચ'}
+                </td>
+                <td>${item.description}</td>
+                <td>₹${item.amount}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+        document.getElementById('totalIncome').innerText = `₹${income}`;
+        document.getElementById('totalExpense').innerText = `₹${expense}`;
+        document.getElementById('netBalance').innerText = `₹${income - expense}`;
+
+        localStorage.setItem('rk_mandir_transactions', JSON.stringify(transactions));
+    }
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const type = document.getElementById('type').value;
+        const description = document.getElementById('description').value;
+        const amount = parseFloat(document.getElementById('amount').value);
+
+        if(description && amount) {
+            transactions.push({ type, description, amount });
+            updateDashboard();
+            form.reset();
+        }
+    });
+
+    // પ્રથમ લોડ પર ડેશબોર્ડ અપડેટ
+    updateDashboard();
+</script>
+
+</body>
+</html>
