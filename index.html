@@ -28,6 +28,7 @@
             padding: 2rem 1rem;
             border-bottom: 5px solid var(--secondary);
             box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            position: relative;
         }
 
         header h1 {
@@ -39,6 +40,21 @@
         header p {
             margin: 5px 0 0 0;
             font-size: 1rem;
+        }
+
+        .admin-nav {
+            margin-top: 15px;
+        }
+
+        .admin-btn {
+            background-color: var(--secondary);
+            color: #800020;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9rem;
         }
 
         .container {
@@ -102,7 +118,7 @@
             box-sizing: border-box;
         }
 
-        button {
+        button.submit-btn {
             background-color: var(--primary);
             color: white;
             border: none;
@@ -112,10 +128,6 @@
             font-size: 1rem;
             width: 100%;
             font-weight: bold;
-        }
-
-        button:hover {
-            background-color: #600018;
         }
 
         table {
@@ -135,13 +147,26 @@
             color: white;
         }
 
-        .darshan-time {
-            display: flex;
-            justify-content: space-around;
-            text-align: center;
-            background: #fff3e0;
-            padding: 15px;
-            border-radius: 8px;
+        .delete-btn {
+            background-color: #c62828;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* એડમિન ફોર્મ મોડ માટે */
+        #adminSection {
+            display: none; /* શરૂઆતમાં છુપાયેલું રહેશે */
+        }
+
+        .badge-admin {
+            background-color: #2e7d32;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
         }
 
         footer {
@@ -158,13 +183,16 @@
 <header>
     <h1>🚩 શ્રી રાધા કૃષ્ણ મંદિર 🚩</h1>
     <p>વાંકાનેર - બાવરી ફળિયું</p>
+    <div class="admin-nav">
+        <button class="admin-btn" id="loginBtn" onclick="toggleAdmin()"><i class="fas fa-lock"></i> એડમિન લોગિન</button>
+    </div>
 </header>
 
 <div class="container">
 
-    <!-- લાઈવ હિસાબ ડેશબોર્ડ -->
+    <!-- લાઇવ હિસાબ ડેશબોર્ડ -->
     <div class="card">
-        <h2><i class="fas fa-calculator"></i> મંદિર લાઇવ હિસાબ ડેશબોર્ડ</h2>
+        <h2><i class="fas fa-calculator"></i> મંદિર લાઇવ હિસાબ ડેશબોર્ડ <span id="adminBadge" style="display:none;" class="badge-admin">એડમિન મોડ</span></h2>
         
         <div class="stats-grid">
             <div class="stat-box income">
@@ -181,33 +209,37 @@
             </div>
         </div>
 
-        <h3>નવી એન્ટ્રી ઉમેરો</h3>
-        <form id="entryForm">
-            <div class="form-group">
-                <label>પ્રકાર:</label>
-                <select id="type">
-                    <option value="income">આવક (દાન / ફાળો)</option>
-                    <option value="expense">ખર્ચ</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>વિગત / ભક્તનું નામ / વસ્તુ:</label>
-                <input type="text" id="description" placeholder="દા.ત. શ્રદ્ધાળુનું દાન અથવા આરતી સામાન" required>
-            </div>
-            <div class="form-group">
-                <label>રકમ (₹):</label>
-                <input type="number" id="amount" placeholder="રકમ લખો" required>
-            </div>
-            <button type="submit">એન્ટ્રી સેવ કરો</button>
-        </form>
+        <!-- ફક્ત એડમિન જ નવી એન્ટ્રી ઉમેરી શકશે -->
+        <div id="adminSection">
+            <h3 style="color: var(--primary);"><i class="fas fa-plus-circle"></i> નવી એન્ટ્રી ઉમેરો (એડમિન ઓન્લી)</h3>
+            <form id="entryForm">
+                <div class="form-group">
+                    <label>પ્રકાર:</label>
+                    <select id="type">
+                        <option value="income">આવક (દાન / ફાળો)</option>
+                        <option value="expense">ખર્ચ</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>વિગત / ભક્તનું નામ / વસ્તુ:</label>
+                    <input type="text" id="description" placeholder="દા.ત. શ્રદ્ધાળુનું દાન અથવા મંદિર ખર્ચ" required>
+                </div>
+                <div class="form-group">
+                    <label>રકમ (₹):</label>
+                    <input type="number" id="amount" placeholder="રકમ લખો" required>
+                </div>
+                <button type="submit" class="submit-btn">એન્ટ્રી સેવ કરો</button>
+            </form>
+        </div>
 
-        <h3 style="margin-top: 25px;">તાજેતરના વ્યવહારો</h3>
+        <h3 style="margin-top: 25px;"><i class="fas fa-list"></i> તમામ વ્યવહારો</h3>
         <table id="transactionTable">
             <thead>
                 <tr>
                     <th>પ્રકાર</th>
                     <th>વિગત</th>
                     <th>રકમ (₹)</th>
+                    <th class="admin-col" style="display:none;">એક્શન</th>
                 </tr>
             </thead>
             <tbody>
@@ -223,10 +255,44 @@
 </footer>
 
 <script>
+    // 🔑 એડમિન પાસવર્ડ (અહીંથી પાસવર્ડ બદલી શકાય છે)
+    const ADMIN_PASSWORD = "radha123";
+    let isAdmin = false;
+
     let transactions = JSON.parse(localStorage.getItem('rk_mandir_transactions')) || [];
 
     const form = document.getElementById('entryForm');
     const tableBody = document.querySelector('#transactionTable tbody');
+
+    function toggleAdmin() {
+        if (!isAdmin) {
+            let pass = prompt("એડમિન પાસવર્ડ આપો:");
+            if (pass === ADMIN_PASSWORD) {
+                isAdmin = true;
+                alert("લોગિન સફળ થયું!");
+                document.getElementById('loginBtn').innerHTML = '<i class="fas fa-sign-out-alt"></i> લોગઆઉટ';
+                document.getElementById('adminSection').style.display = 'block';
+                document.getElementById('adminBadge').style.display = 'inline';
+                updateDashboard();
+            } else if (pass !== null) {
+                alert("ખોટો પાસવર્ડ!");
+            }
+        } else {
+            isAdmin = false;
+            alert("લોગઆઉટ થઈ ગયું.");
+            document.getElementById('loginBtn').innerHTML = '<i class="fas fa-lock"></i> એડમિન લોગિન';
+            document.getElementById('adminSection').style.display = 'none';
+            document.getElementById('adminBadge').style.display = 'none';
+            updateDashboard();
+        }
+    }
+
+    function deleteEntry(index) {
+        if(confirm("શું તમે આ એન્ટ્રી કાઢી નાખવા માગો છો?")) {
+            transactions.splice(index, 1);
+            updateDashboard();
+        }
+    }
 
     function updateDashboard() {
         let income = 0;
@@ -234,7 +300,11 @@
 
         tableBody.innerHTML = '';
 
-        transactions.forEach((item) => {
+        // એડમિન કોલમ દર્શાવવી કે છુપાવવી
+        const adminCols = document.querySelectorAll('.admin-col');
+        adminCols.forEach(col => col.style.display = isAdmin ? 'table-cell' : 'none');
+
+        transactions.forEach((item, index) => {
             if(item.type === 'income') income += item.amount;
             if(item.type === 'expense') expense += item.amount;
 
@@ -245,6 +315,7 @@
                 </td>
                 <td>${item.description}</td>
                 <td>₹${item.amount}</td>
+                ${isAdmin ? `<td><button class="delete-btn" onclick="deleteEntry(${index})"><i class="fas fa-trash"></i></button></td>` : ''}
             `;
             tableBody.appendChild(row);
         });
@@ -266,6 +337,7 @@
             transactions.push({ type, description, amount });
             updateDashboard();
             form.reset();
+            alert("એન્ટ્રી સફળતાપૂર્વક ઉમેરાઈ ગઈ!");
         }
     });
 
