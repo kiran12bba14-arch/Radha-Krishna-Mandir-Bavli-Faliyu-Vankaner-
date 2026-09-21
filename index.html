@@ -4,63 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>શ્રી રાધા કૃષ્ણ મંદિર - વાંકાનેર (બાવરી ફળિયું)</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <style>
         :root {
             --primary: #800020;
+            --primary-dark: #5c0017;
             --secondary: #d4af37;
+            --secondary-light: #f3e5ab;
             --bg: #fffbf2;
-            --text: #333;
+            --card-bg: #ffffff;
+            --text: #2c2c2c;
+            --text-light: #666666;
+            --success: #2e7d32;
+            --danger: #c62828;
+            --info: #0277bd;
+            --warning: #e65100;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: var(--bg);
             color: var(--text);
+            padding-bottom: 40px;
         }
 
         header {
-            background: linear-gradient(135deg, #800020, #b30000);
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary), #a00028);
             color: #fff;
             text-align: center;
-            padding: 1.5rem 1rem;
+            padding: 2rem 1rem 1.5rem;
             border-bottom: 5px solid var(--secondary);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             position: relative;
         }
 
-        /* ગોળાકાર રાધા કૃષ્ણ મૂર્તિ માટે CSS */
         .god-img-container {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 10px auto;
+            width: 130px;
+            height: 130px;
+            margin: 0 auto 12px auto;
             border-radius: 50%;
             border: 4px solid var(--secondary);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
             overflow: hidden;
-            background-color: #fff;
+            background: radial-gradient(circle, #fffdf0 0%, #ffe9a6 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .god-img {
+        .god-svg {
             width: 100%;
             height: 100%;
-            object-fit: cover;
         }
 
         header h1 {
             margin: 0;
-            font-size: 1.8rem;
-            color: var(--secondary);
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            font-size: 1.9rem;
+            color: var(--secondary-light);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+            letter-spacing: 0.5px;
         }
 
         header p {
-            margin: 5px 0 0 0;
-            font-size: 1rem;
+            margin: 6px 0 0 0;
+            font-size: 1.1rem;
+            opacity: 0.95;
+            font-weight: 500;
         }
 
         .admin-nav {
@@ -68,144 +85,209 @@
         }
 
         .admin-btn {
-            background-color: var(--secondary);
-            color: #800020;
+            background: linear-gradient(to right, var(--secondary), #f5d061);
+            color: var(--primary-dark);
             border: none;
-            padding: 8px 18px;
-            border-radius: 20px;
+            padding: 9px 20px;
+            border-radius: 25px;
             font-weight: bold;
+            font-size: 0.95rem;
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+            transition: all 0.2s ease;
+        }
+
+        .admin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0,0,0,0.3);
         }
 
         .container {
-            max-width: 900px;
-            margin: 20px auto;
+            max-width: 950px;
+            margin: 25px auto;
             padding: 0 15px;
         }
 
         .card {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            background: var(--card-bg);
+            padding: 22px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            margin-bottom: 22px;
+            border-left: 6px solid var(--primary);
+        }
+
+        .card-header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-bottom: 2px solid var(--bg);
+            padding-bottom: 10px;
             margin-bottom: 20px;
-            border-left: 5px solid var(--primary);
         }
 
         h2 {
             color: var(--primary);
-            margin-top: 0;
-            border-bottom: 2px solid var(--bg);
-            padding-bottom: 8px;
+            margin: 0;
+            font-size: 1.4rem;
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
             gap: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
 
         .stat-box {
-            padding: 15px;
-            border-radius: 8px;
+            padding: 16px;
+            border-radius: 10px;
             text-align: center;
             color: white;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.12);
         }
 
-        .income { background-color: #2e7d32; }
-        .expense { background-color: #c62828; }
-        .balance { background-color: #0277bd; }
-        .pending { background-color: #e65100; }
+        .income { background: linear-gradient(135deg, #2e7d32, #1b5e20); }
+        .expense { background: linear-gradient(135deg, #c62828, #b71c1c); }
+        .balance { background: linear-gradient(135deg, #0277bd, #01579b); }
+        .pending { background: linear-gradient(135deg, #e65100, #bf360c); }
 
-        .stat-box h3 { margin: 0; font-size: 0.85rem; }
-        .stat-box p { margin: 5px 0 0 0; font-size: 1.4rem; font-weight: bold; }
+        .stat-box h3 { margin: 0; font-size: 0.9rem; font-weight: 600; opacity: 0.9; }
+        .stat-box p { margin: 6px 0 0 0; font-size: 1.5rem; font-weight: bold; }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text);
         }
 
         input, select {
             width: 100%;
-            padding: 10px;
+            padding: 11px;
             border: 1px solid #ccc;
-            border-radius: 6px;
+            border-radius: 7px;
             box-sizing: border-box;
+            font-size: 0.95rem;
         }
 
         button.submit-btn {
-            background-color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
             border: none;
             padding: 12px 20px;
-            border-radius: 6px;
+            border-radius: 7px;
             cursor: pointer;
             font-size: 1rem;
             width: 100%;
             font-weight: bold;
+            margin-top: 10px;
+            box-shadow: 0 3px 8px rgba(128, 0, 32, 0.3);
+        }
+
+        .search-container {
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .search-container input {
+            padding-left: 35px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
+            margin-top: 10px;
+            background: #fff;
         }
 
         th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
+            border: 1px solid #e0e0e0;
+            padding: 11px 12px;
             text-align: left;
+            font-size: 0.92rem;
         }
 
         th {
             background-color: var(--primary);
             color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fcfcfc;
         }
 
         .delete-btn {
             background-color: #c62828;
             color: white;
             border: none;
-            padding: 5px 10px;
+            padding: 6px 10px;
             border-radius: 4px;
             cursor: pointer;
         }
 
         #adminSection {
             display: none;
+            background: #fdfbf7;
+            padding: 18px;
+            border-radius: 10px;
+            border: 1px solid #f0e6d2;
+            margin-bottom: 20px;
         }
 
         .badge-admin {
             background-color: #2e7d32;
             color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
+            padding: 4px 10px;
+            border-radius: 12px;
             font-size: 0.8rem;
+            font-weight: normal;
         }
 
         .tabs {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             margin-top: 20px;
-            border-bottom: 2px solid #ddd;
+            border-bottom: 2px solid #e0e0e0;
             overflow-x: auto;
         }
 
         .tab-btn {
-            padding: 10px 15px;
+            padding: 10px 18px;
             border: none;
-            background: #eee;
+            background: #eaeaea;
             cursor: pointer;
-            border-radius: 6px 6px 0 0;
+            border-radius: 8px 8px 0 0;
             font-weight: bold;
             white-space: nowrap;
+            color: #555;
+            transition: all 0.2s;
         }
 
         .tab-btn.active {
@@ -221,31 +303,54 @@
         }
 
         .pdf-btn {
-            background: #0277bd;
+            background: var(--info);
             color: white;
             border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
+            padding: 9px 14px;
+            border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 0.85rem;
+            font-size: 0.88rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         footer {
             text-align: center;
-            padding: 15px;
-            background: var(--primary);
+            padding: 18px;
+            background: var(--primary-dark);
             color: white;
-            margin-top: 30px;
+            margin-top: 40px;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
 
 <header>
-    <!-- ⬇️ તમે મોકલેલી રાધા કૃષ્ણની તસવીર કોડમાં સીધી જ ઇનબિલ્ટ કરી દીધી છે ⬇️ -->
     <div class="god-img-container">
-        <img src="https://i.ibb.co/6y4TjNm/radha-krishna.jpg" onerror="this.src='https://images.unsplash.com/photo-1617634667039-8e4cb277ab46?w=400'" alt="શ્રી રાધા કૃષ્ણ" class="god-img">
+        <svg class="god-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="100" r="95" fill="#fdf3d6" stroke="#d4af37" stroke-width="4"/>
+            <path d="M 100 20 C 130 50, 160 80, 150 120 C 140 160, 100 180, 100 180 C 100 180, 60 160, 50 120 C 40 80, 70 50, 100 20 Z" fill="#2d6a4f" opacity="0.15"/>
+            <path d="M 60 40 Q 90 10 130 25 Q 120 60 80 50 Z" fill="#1b4332"/>
+            <circle cx="100" cy="30" r="8" fill="#d4af37"/>
+            <circle cx="115" cy="22" r="5" fill="#b7094c"/>
+            <path d="M 40 100 Q 100 130 160 100" stroke="#d4af37" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <path d="M 40 100 Q 100 130 160 100" stroke="#800020" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <circle cx="50" cy="102" r="3" fill="#fff"/>
+            <circle cx="70" cy="108" r="3" fill="#fff"/>
+            <circle cx="90" cy="111" r="3" fill="#fff"/>
+            <circle cx="110" cy="111" r="3" fill="#fff"/>
+            <circle cx="130" cy="108" r="3" fill="#fff"/>
+            <circle cx="150" cy="102" r="3" fill="#fff"/>
+            <path d="M 100 55 C 80 75 80 95 100 115 C 120 95 120 75 100 55 Z" fill="#d4af37" opacity="0.8"/>
+            <path d="M 100 65 C 88 80 88 92 100 105 C 112 92 112 80 100 65 Z" fill="#800020"/>
+            <circle cx="100" cy="85" r="4" fill="#fff"/>
+            <path d="M 75 140 Q 100 125 125 140 Q 100 170 75 140 Z" fill="#e9c46a"/>
+            <path d="M 85 142 Q 100 132 115 142 Q 100 162 85 142 Z" fill="#e76f51"/>
+            <circle cx="100" cy="148" r="5" fill="#2a9d8f"/>
+        </svg>
     </div>
 
     <h1>🚩 શ્રી રાધા કૃષ્ણ મંદિર 🚩</h1>
@@ -258,7 +363,10 @@
 
 <div class="container">
     <div class="card">
-        <h2><i class="fas fa-calculator"></i> મંદિર લાઇવ હિસાબ ડેશબોર્ડ <span id="adminBadge" style="display:none;" class="badge-admin">એડમિન મોડ</span></h2>
+        <div class="card-header-flex">
+            <h2><i class="fas fa-calculator"></i> મંદિર લાઇવ હિસાબ ડેશબોર્ડ</h2>
+            <span id="adminBadge" style="display:none;" class="badge-admin"><i class="fas fa-user-shield"></i> એડમિન મોડ સક્રિય</span>
+        </div>
         
         <div class="stats-grid">
             <div class="stat-box income">
@@ -279,40 +387,47 @@
             </div>
         </div>
 
-        <div class="pdf-section">
-            <button class="pdf-btn" onclick="downloadPDF('all')"><i class="fas fa-file-pdf"></i> તમામ વ્યવહારો PDF</button>
-            <button class="pdf-btn" onclick="downloadPDF('jama')"><i class="fas fa-file-pdf"></i> હરિભક્તો જમા સેવા PDF</button>
-            <button class="pdf-btn" onclick="downloadPDF('baki')"><i class="fas fa-file-pdf"></i> બાકી સેવા PDF</button>
+        <div id="adminSection">
+            <h3 style="color: var(--primary); margin-top:0;"><i class="fas fa-plus-circle"></i> નવી એન્ટ્રી ઉમેરો (એડમિન)</h3>
+            <form id="entryForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>પ્રકાર:</label>
+                        <select id="type" onchange="toggleInputs()">
+                            <option value="income">આવક (દાન / ફાળો / સેવા)</option>
+                            <option value="expense">ખર્ચ</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="nameGroup">
+                        <label>હરિભગતનું નામ:</label>
+                        <input type="text" id="haribhakatName" placeholder="દા.ત. રમેશભાઈ પટેલ">
+                    </div>
+                    <div class="form-group">
+                        <label>વિગત / વસ્તુ / પ્રસંગ:</label>
+                        <input type="text" id="description" placeholder="દા.ત. અન્નકૂટ સેવા / સિમેન્ટ" required>
+                    </div>
+                    <div class="form-group">
+                        <label>જમા કરેલ રકમ (₹):</label>
+                        <input type="number" id="amount" placeholder="0" required min="0">
+                    </div>
+                    <div class="form-group" id="bakiGroup">
+                        <label>બાકી રહેતી સેવા રકમ (₹):</label>
+                        <input type="number" id="bakiAmount" placeholder="0" value="0" min="0">
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn"><i class="fas fa-save"></i> એન્ટ્રી સેવ કરો</button>
+            </form>
         </div>
 
-        <div id="adminSection">
-            <h3 style="color: var(--primary); margin-top:20px;"><i class="fas fa-plus-circle"></i> નવી એન્ટ્રી ઉમેરો (એડમિન)</h3>
-            <form id="entryForm">
-                <div class="form-group">
-                    <label>પ્રકાર:</label>
-                    <select id="type" onchange="toggleInputs()">
-                        <option value="income">આવક (દાન / ફાળો / સેવા)</option>
-                        <option value="expense">ખર્ચ</option>
-                    </select>
-                </div>
-                <div class="form-group" id="nameGroup">
-                    <label>હરિભગતનું નામ:</label>
-                    <input type="text" id="haribhakatName" placeholder="દા.ત. રમેશભાઈ પટેલ">
-                </div>
-                <div class="form-group">
-                    <label>વિગત / વસ્તુ / પ્રસંગ:</label>
-                    <input type="text" id="description" placeholder="દા.ત. અન્નકૂટ સેવા / રેતી" required>
-                </div>
-                <div class="form-group">
-                    <label>જમા કરેલ રકમ (₹):</label>
-                    <input type="number" id="amount" placeholder="0" required>
-                </div>
-                <div class="form-group" id="bakiGroup">
-                    <label>બાકી રહેતી સેવા રકમ (₹):</label>
-                    <input type="number" id="bakiAmount" placeholder="0" value="0">
-                </div>
-                <button type="submit" class="submit-btn">એન્ટ્રી સેવ કરો</button>
-            </form>
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="searchInput" onkeyup="filterData()" placeholder="નામ અથવા વિગત દ્વારા શોધો...">
+        </div>
+
+        <div class="pdf-section">
+            <button class="pdf-btn" onclick="downloadPDF('all')"><i class="fas fa-file-pdf"></i> તમામ વ્યવહારો PDF</button>
+            <button class="pdf-btn" onclick="downloadPDF('jama')"><i class="fas fa-file-pdf"></i> જમા સેવા PDF</button>
+            <button class="pdf-btn" onclick="downloadPDF('baki')"><i class="fas fa-file-pdf"></i> બાકી સેવા PDF</button>
         </div>
 
         <div class="tabs">
@@ -321,48 +436,51 @@
             <button class="tab-btn" onclick="switchTab(event, 'tab3')">બાકી સેવા</button>
         </div>
 
-        <!-- Tab 1 -->
         <div id="tab1" class="tab-content">
-            <table id="transactionTable">
-                <thead>
-                    <tr>
-                        <th>પ્રકાર</th>
-                        <th>હરિભગત / વિગત</th>
-                        <th>રકમ (₹)</th>
-                        <th class="admin-col" style="display:none;">એક્શન</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <div class="table-responsive">
+                <table id="transactionTable">
+                    <thead>
+                        <tr>
+                            <th>પ્રકાર</th>
+                            <th>હરિભગત / વિગત</th>
+                            <th>રકમ (₹)</th>
+                            <th class="admin-col" style="display:none;">એક્શન</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
 
-        <!-- Tab 2 -->
         <div id="tab2" class="tab-content" style="display:none;">
-            <table id="jamaTable">
-                <thead>
-                    <tr>
-                        <th>હરિભગતનું નામ</th>
-                        <th>વિગત</th>
-                        <th>જમા રકમ (₹)</th>
-                        <th>બાકી રકમ (₹)</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <div class="table-responsive">
+                <table id="jamaTable">
+                    <thead>
+                        <tr>
+                            <th>હરિભગતનું નામ</th>
+                            <th>વિગત</th>
+                            <th>જમા રકમ (₹)</th>
+                            <th>બાકી રકમ (₹)</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
 
-        <!-- Tab 3 -->
         <div id="tab3" class="tab-content" style="display:none;">
-            <table id="bakiTable">
-                <thead>
-                    <tr>
-                        <th>હરિભગતનું નામ</th>
-                        <th>વિગત</th>
-                        <th>બાકી સેવા રકમ (₹)</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <div class="table-responsive">
+                <table id="bakiTable">
+                    <thead>
+                        <tr>
+                            <th>હરિભગતનું નામ</th>
+                            <th>વિગત</th>
+                            <th>બાકી સેવા રકમ (₹)</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -374,7 +492,14 @@
 <script>
     const ADMIN_PASSWORD = "radha123";
     let isAdmin = false;
-    let transactions = JSON.parse(localStorage.getItem('rk_mandir_transactions')) || [];
+    
+    let defaultData = [
+        { type: 'income', name: 'રમેશભાઈ પટેલ', description: 'અન્નકૂટ સેવા', amount: 2000, bakiAmount: 500 },
+        { type: 'income', name: 'સુરેશભાઈ રાઠોડ', description: 'મંદિર બાંધકામ સેવા', amount: 5000, bakiAmount: 2000 },
+        { type: 'expense', name: '', description: 'લાઈટ બિલ ખર્ચ', amount: 1200, bakiAmount: 0 }
+    ];
+
+    let transactions = JSON.parse(localStorage.getItem('rk_mandir_transactions')) || defaultData;
 
     function toggleInputs() {
         const type = document.getElementById('type').value;
@@ -389,9 +514,11 @@
                 isAdmin = true;
                 document.getElementById('loginBtn').innerHTML = '<i class="fas fa-sign-out-alt"></i> લોગઆઉટ';
                 document.getElementById('adminSection').style.display = 'block';
-                document.getElementById('adminBadge').style.display = 'inline';
+                document.getElementById('adminBadge').style.display = 'inline-block';
                 updateDashboard();
-            } else if (pass !== null) { alert("ખોટો પાસવર્ડ!"); }
+            } else if (pass !== null) { 
+                alert("ખોટો પાસવર્ડ!"); 
+            }
         } else {
             isAdmin = false;
             document.getElementById('loginBtn').innerHTML = '<i class="fas fa-lock"></i> એડમિન લોગિન';
@@ -415,7 +542,12 @@
         }
     }
 
-    function updateDashboard() {
+    function filterData() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        updateDashboard(query);
+    }
+
+    function updateDashboard(searchQuery = '') {
         let income = 0, expense = 0, totalBaki = 0;
         const tBody = document.querySelector('#transactionTable tbody');
         const jBody = document.querySelector('#jamaTable tbody');
@@ -434,12 +566,17 @@
                 expense += item.amount;
             }
 
+            const matchSearch = (item.name && item.name.toLowerCase().includes(searchQuery)) || 
+                                (item.description && item.description.toLowerCase().includes(searchQuery));
+
+            if (!matchSearch && searchQuery !== '') return;
+
             // Tab 1 Row
             tBody.innerHTML += `
                 <tr>
-                    <td style="color:${item.type === 'income' ? 'green':'red'}; font-weight:bold;">${item.type === 'income' ? 'આવક' : 'ખર્ચ'}</td>
+                    <td style="color:${item.type === 'income' ? '#2e7d32':'#c62828'}; font-weight:bold;">${item.type === 'income' ? 'આવક' : 'ખર્ચ'}</td>
                     <td>${item.name ? item.name + ' (' + item.description + ')' : item.description}</td>
-                    <td>₹${item.amount}</td>
+                    <td><b>₹${item.amount}</b></td>
                     ${isAdmin ? `<td class="admin-col"><button class="delete-btn" onclick="deleteEntry(${index})"><i class="fas fa-trash"></i></button></td>` : ''}
                 </tr>`;
 
@@ -449,8 +586,8 @@
                     <tr>
                         <td><b>${item.name}</b></td>
                         <td>${item.description}</td>
-                        <td style="color:green; font-weight:bold;">₹${item.amount}</td>
-                        <td style="color:red;">₹${item.bakiAmount || 0}</td>
+                        <td style="color:#2e7d32; font-weight:bold;">₹${item.amount}</td>
+                        <td style="color:#c62828;">₹${item.bakiAmount || 0}</td>
                     </tr>`;
             }
 
@@ -460,7 +597,7 @@
                     <tr>
                         <td><b>${item.name}</b></td>
                         <td>${item.description}</td>
-                        <td style="color:red; font-weight:bold;">₹${item.bakiAmount}</td>
+                        <td style="color:#e65100; font-weight:bold;">₹${item.bakiAmount}</td>
                     </tr>`;
             }
         });
@@ -485,7 +622,7 @@
         updateDashboard();
         this.reset();
         toggleInputs();
-        alert("એન્ટ્રી સેવ થઈ ગઈ!");
+        alert("એન્ટ્રી સફળતાપૂર્વક ઉમેરાઈ ગઈ!");
     });
 
     function downloadPDF(type) {
@@ -494,21 +631,21 @@
         doc.setFontSize(14);
 
         if(type === 'all') {
-            doc.text("Shree Radha Krishna Mandir - All Transactions", 14, 15);
+            doc.text("Shree Radha Krishna Mandir - All Transactions Report", 14, 15);
             doc.autoTable({
                 startY: 25,
                 head: [['Type', 'Details', 'Amount (Rs)']],
                 body: transactions.map(t => [t.type === 'income'?'Income':'Expense', t.name ? `${t.name} (${t.description})` : t.description, t.amount])
             });
         } else if(type === 'jama') {
-            doc.text("Haribhakt Seva Report", 14, 15);
+            doc.text("Shree Radha Krishna Mandir - Haribhakt Seva Report", 14, 15);
             doc.autoTable({
                 startY: 25,
                 head: [['Name', 'Details', 'Jama (Rs)', 'Baki (Rs)']],
                 body: transactions.filter(t => t.type === 'income' && t.name).map(t => [t.name, t.description, t.amount, t.bakiAmount || 0])
             });
         } else if(type === 'baki') {
-            doc.text("Pending Seva Report", 14, 15);
+            doc.text("Shree Radha Krishna Mandir - Pending Seva Report", 14, 15);
             doc.autoTable({
                 startY: 25,
                 head: [['Name', 'Details', 'Pending Amount (Rs)']],
