@@ -30,12 +30,32 @@
             padding: 1.5rem 1rem;
             border-bottom: 5px solid var(--secondary);
             box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        /* ગોળાકાર રાધા કૃષ્ણ મૂર્તિ માટે CSS */
+        .god-img-container {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 10px auto;
+            border-radius: 50%;
+            border: 4px solid var(--secondary);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            overflow: hidden;
+            background-color: #fff;
+        }
+
+        .god-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         header h1 {
             margin: 0;
             font-size: 1.8rem;
             color: var(--secondary);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
 
         header p {
@@ -51,10 +71,11 @@
             background-color: var(--secondary);
             color: #800020;
             border: none;
-            padding: 8px 16px;
+            padding: 8px 18px;
             border-radius: 20px;
             font-weight: bold;
             cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
 
         .container {
@@ -222,8 +243,14 @@
 <body>
 
 <header>
+    <!-- ⬇️ સોનેરી ફ્રેમમાં રાધા કૃષ્ણ ભગવાનની સુંદર મૂર્તિ ⬇️ -->
+    <div class="god-img-container">
+        <img src="https://images.unsplash.com/photo-1617634667039-8e4cb277ab46?w=400&q=80" alt="શ્રી રાધા કૃષ્ણ" class="god-img">
+    </div>
+
     <h1>🚩 શ્રી રાધા કૃષ્ણ મંદિર 🚩</h1>
     <p>વાંકાનેર - બાવરી ફળિયું</p>
+    
     <div class="admin-nav">
         <button class="admin-btn" id="loginBtn" onclick="toggleAdmin()"><i class="fas fa-lock"></i> એડમિન લોગિન</button>
     </div>
