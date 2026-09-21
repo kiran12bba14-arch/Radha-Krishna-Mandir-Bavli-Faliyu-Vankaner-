@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>શ્રી રાધા કૃષ્ણ મંદિર - વાંકાનેર (બાવરી ફળિયું)</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <style>
         :root {
             --primary: #800020;
@@ -25,7 +23,7 @@
 
         * {
             box-sizing: border-box;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, 'Shruti', sans-serif;
         }
 
         body {
@@ -95,11 +93,6 @@
             cursor: pointer;
             box-shadow: 0 3px 8px rgba(0,0,0,0.25);
             transition: all 0.2s ease;
-        }
-
-        .admin-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 12px rgba(0,0,0,0.3);
         }
 
         .container {
@@ -195,7 +188,6 @@
             width: 100%;
             font-weight: bold;
             margin-top: 10px;
-            box-shadow: 0 3px 8px rgba(128, 0, 32, 0.3);
         }
 
         .search-container {
@@ -267,7 +259,6 @@
             padding: 4px 10px;
             border-radius: 12px;
             font-size: 0.8rem;
-            font-weight: normal;
         }
 
         .tabs {
@@ -287,7 +278,6 @@
             font-weight: bold;
             white-space: nowrap;
             color: #555;
-            transition: all 0.2s;
         }
 
         .tab-btn.active {
@@ -323,6 +313,23 @@
             color: white;
             margin-top: 40px;
             font-size: 0.9rem;
+        }
+
+        /* 🖨️ પ્રિન્ટ / PDF માટે સ્પેશિયલ સેટિંગ્સ */
+        @media print {
+            .admin-nav, .admin-btn, #adminSection, .search-container, .pdf-section, .tabs, .delete-btn, .admin-col {
+                display: none !important;
+            }
+            .tab-content {
+                display: block !important;
+            }
+            body {
+                background: #fff !important;
+            }
+            .card {
+                box-shadow: none !important;
+                border: none !important;
+            }
         }
     </style>
 </head>
@@ -425,9 +432,7 @@
         </div>
 
         <div class="pdf-section">
-            <button class="pdf-btn" onclick="downloadPDF('all')"><i class="fas fa-file-pdf"></i> તમામ વ્યવહારો PDF</button>
-            <button class="pdf-btn" onclick="downloadPDF('jama')"><i class="fas fa-file-pdf"></i> જમા સેવા PDF</button>
-            <button class="pdf-btn" onclick="downloadPDF('baki')"><i class="fas fa-file-pdf"></i> બાકી સેવા PDF</button>
+            <button class="pdf-btn" onclick="printReport()"><i class="fas fa-print"></i> પ્રિન્ટ / PDF માં સેવ કરો (ગુજરાતી)</button>
         </div>
 
         <div class="tabs">
@@ -625,34 +630,9 @@
         alert("એન્ટ્રી સફળતાપૂર્વક ઉમેરાઈ ગઈ!");
     });
 
-    function downloadPDF(type) {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.setFontSize(14);
-
-        if(type === 'all') {
-            doc.text("Shree Radha Krishna Mandir - All Transactions Report", 14, 15);
-            doc.autoTable({
-                startY: 25,
-                head: [['Type', 'Details', 'Amount (Rs)']],
-                body: transactions.map(t => [t.type === 'income'?'Income':'Expense', t.name ? `${t.name} (${t.description})` : t.description, t.amount])
-            });
-        } else if(type === 'jama') {
-            doc.text("Shree Radha Krishna Mandir - Haribhakt Seva Report", 14, 15);
-            doc.autoTable({
-                startY: 25,
-                head: [['Name', 'Details', 'Jama (Rs)', 'Baki (Rs)']],
-                body: transactions.filter(t => t.type === 'income' && t.name).map(t => [t.name, t.description, t.amount, t.bakiAmount || 0])
-            });
-        } else if(type === 'baki') {
-            doc.text("Shree Radha Krishna Mandir - Pending Seva Report", 14, 15);
-            doc.autoTable({
-                startY: 25,
-                head: [['Name', 'Details', 'Pending Amount (Rs)']],
-                body: transactions.filter(t => t.type === 'income' && t.bakiAmount > 0).map(t => [t.name, t.description, t.bakiAmount])
-            });
-        }
-        doc.save(`${type}_report.pdf`);
+    // 🖨️ નવી પરફેક્ટ ગુજરાતી PDF પદ્ધતિ
+    function printReport() {
+        window.print();
     }
 
     toggleInputs();
