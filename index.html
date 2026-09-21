@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>શ્રી રાધા કૃષ્ણ મંદિર - વાંકાનેર (બાવરી ફળિયું)</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <style>
         :root {
-            --primary: #800020; /* Deep Maroon */
-            --secondary: #d4af37; /* Gold */
+            --primary: #800020;
+            --secondary: #d4af37;
             --bg: #fffbf2;
             --text: #333;
         }
@@ -25,10 +27,9 @@
             background: linear-gradient(135deg, #800020, #b30000);
             color: #fff;
             text-align: center;
-            padding: 2rem 1rem;
+            padding: 1.5rem 1rem;
             border-bottom: 5px solid var(--secondary);
             box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            position: relative;
         }
 
         header h1 {
@@ -54,7 +55,6 @@
             border-radius: 20px;
             font-weight: bold;
             cursor: pointer;
-            font-size: 0.9rem;
         }
 
         .container {
@@ -81,7 +81,7 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
         }
@@ -96,9 +96,10 @@
         .income { background-color: #2e7d32; }
         .expense { background-color: #c62828; }
         .balance { background-color: #0277bd; }
+        .pending { background-color: #e65100; }
 
-        .stat-box h3 { margin: 0; font-size: 0.9rem; }
-        .stat-box p { margin: 5px 0 0 0; font-size: 1.5rem; font-weight: bold; }
+        .stat-box h3 { margin: 0; font-size: 0.85rem; }
+        .stat-box p { margin: 5px 0 0 0; font-size: 1.4rem; font-weight: bold; }
 
         .form-group {
             margin-bottom: 15px;
@@ -156,9 +157,8 @@
             cursor: pointer;
         }
 
-        /* એડમિન ફોર્મ મોડ માટે */
         #adminSection {
-            display: none; /* શરૂઆતમાં છુપાયેલું રહેશે */
+            display: none;
         }
 
         .badge-admin {
@@ -167,6 +167,47 @@
             padding: 4px 8px;
             border-radius: 4px;
             font-size: 0.8rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            border-bottom: 2px solid #ddd;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 10px 15px;
+            border: none;
+            background: #eee;
+            cursor: pointer;
+            border-radius: 6px 6px 0 0;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .pdf-section {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .pdf-btn {
+            background: #0277bd;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
         }
 
         footer {
@@ -189,8 +230,6 @@
 </header>
 
 <div class="container">
-
-    <!-- લાઇવ હિસાબ ડેશબોર્ડ -->
     <div class="card">
         <h2><i class="fas fa-calculator"></i> મંદિર લાઇવ હિસાબ ડેશબોર્ડ <span id="adminBadge" style="display:none;" class="badge-admin">એડમિન મોડ</span></h2>
         
@@ -207,47 +246,98 @@
                 <h3>બચત રકમ</h3>
                 <p id="netBalance">₹0</p>
             </div>
+            <div class="stat-box pending">
+                <h3>કુલ બાકી સેવા</h3>
+                <p id="totalPending">₹0</p>
+            </div>
         </div>
 
-        <!-- ફક્ત એડમિન જ નવી એન્ટ્રી ઉમેરી શકશે -->
+        <div class="pdf-section">
+            <button class="pdf-btn" onclick="downloadPDF('all')"><i class="fas fa-file-pdf"></i> તમામ વ્યવહારો PDF</button>
+            <button class="pdf-btn" onclick="downloadPDF('jama')"><i class="fas fa-file-pdf"></i> હરિભક્તો જમા સેવા PDF</button>
+            <button class="pdf-btn" onclick="downloadPDF('baki')"><i class="fas fa-file-pdf"></i> બાકી સેવા PDF</button>
+        </div>
+
         <div id="adminSection">
-            <h3 style="color: var(--primary);"><i class="fas fa-plus-circle"></i> નવી એન્ટ્રી ઉમેરો (એડમિન ઓન્લી)</h3>
+            <h3 style="color: var(--primary); margin-top:20px;"><i class="fas fa-plus-circle"></i> નવી એન્ટ્રી ઉમેરો (એડમિન)</h3>
             <form id="entryForm">
                 <div class="form-group">
                     <label>પ્રકાર:</label>
-                    <select id="type">
-                        <option value="income">આવક (દાન / ફાળો)</option>
+                    <select id="type" onchange="toggleInputs()">
+                        <option value="income">આવક (દાન / ફાળો / સેવા)</option>
                         <option value="expense">ખર્ચ</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>વિગત / ભક્તનું નામ / વસ્તુ:</label>
-                    <input type="text" id="description" placeholder="દા.ત. શ્રદ્ધાળુનું દાન અથવા મંદિર ખર્ચ" required>
+                <div class="form-group" id="nameGroup">
+                    <label>હરિભગતનું નામ:</label>
+                    <input type="text" id="haribhakatName" placeholder="દા.ત. રમેશભાઈ પટેલ">
                 </div>
                 <div class="form-group">
-                    <label>રકમ (₹):</label>
-                    <input type="number" id="amount" placeholder="રકમ લખો" required>
+                    <label>વિગત / વસ્તુ / પ્રસંગ:</label>
+                    <input type="text" id="description" placeholder="દા.ત. અન્નકૂટ સેવા / રેતી" required>
+                </div>
+                <div class="form-group">
+                    <label>જમા કરેલ રકમ (₹):</label>
+                    <input type="number" id="amount" placeholder="0" required>
+                </div>
+                <div class="form-group" id="bakiGroup">
+                    <label>બાકી રહેતી સેવા રકમ (₹):</label>
+                    <input type="number" id="bakiAmount" placeholder="0" value="0">
                 </div>
                 <button type="submit" class="submit-btn">એન્ટ્રી સેવ કરો</button>
             </form>
         </div>
 
-        <h3 style="margin-top: 25px;"><i class="fas fa-list"></i> તમામ વ્યવહારો</h3>
-        <table id="transactionTable">
-            <thead>
-                <tr>
-                    <th>પ્રકાર</th>
-                    <th>વિગત</th>
-                    <th>રકમ (₹)</th>
-                    <th class="admin-col" style="display:none;">એક્શન</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- ડેટા અહીં આવશે -->
-            </tbody>
-        </table>
-    </div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab(event, 'tab1')">તમામ વ્યવહારો</button>
+            <button class="tab-btn" onclick="switchTab(event, 'tab2')">હરિભક્તોની જમા સેવા</button>
+            <button class="tab-btn" onclick="switchTab(event, 'tab3')">બાકી સેવા</button>
+        </div>
 
+        <!-- Tab 1 -->
+        <div id="tab1" class="tab-content">
+            <table id="transactionTable">
+                <thead>
+                    <tr>
+                        <th>પ્રકાર</th>
+                        <th>હરિભગત / વિગત</th>
+                        <th>રકમ (₹)</th>
+                        <th class="admin-col" style="display:none;">એક્શન</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- Tab 2 -->
+        <div id="tab2" class="tab-content" style="display:none;">
+            <table id="jamaTable">
+                <thead>
+                    <tr>
+                        <th>હરિભગતનું નામ</th>
+                        <th>વિગત</th>
+                        <th>જમા રકમ (₹)</th>
+                        <th>બાકી રકમ (₹)</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- Tab 3 -->
+        <div id="tab3" class="tab-content" style="display:none;">
+            <table id="bakiTable">
+                <thead>
+                    <tr>
+                        <th>હરિભગતનું નામ</th>
+                        <th>વિગત</th>
+                        <th>બાકી સેવા રકમ (₹)</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <footer>
@@ -255,36 +345,40 @@
 </footer>
 
 <script>
-    // 🔑 એડમિન પાસવર્ડ (અહીંથી પાસવર્ડ બદલી શકાય છે)
     const ADMIN_PASSWORD = "radha123";
     let isAdmin = false;
-
     let transactions = JSON.parse(localStorage.getItem('rk_mandir_transactions')) || [];
 
-    const form = document.getElementById('entryForm');
-    const tableBody = document.querySelector('#transactionTable tbody');
+    function toggleInputs() {
+        const type = document.getElementById('type').value;
+        document.getElementById('nameGroup').style.display = type === 'income' ? 'block' : 'none';
+        document.getElementById('bakiGroup').style.display = type === 'income' ? 'block' : 'none';
+    }
 
     function toggleAdmin() {
         if (!isAdmin) {
             let pass = prompt("એડમિન પાસવર્ડ આપો:");
             if (pass === ADMIN_PASSWORD) {
                 isAdmin = true;
-                alert("લોગિન સફળ થયું!");
                 document.getElementById('loginBtn').innerHTML = '<i class="fas fa-sign-out-alt"></i> લોગઆઉટ';
                 document.getElementById('adminSection').style.display = 'block';
                 document.getElementById('adminBadge').style.display = 'inline';
                 updateDashboard();
-            } else if (pass !== null) {
-                alert("ખોટો પાસવર્ડ!");
-            }
+            } else if (pass !== null) { alert("ખોટો પાસવર્ડ!"); }
         } else {
             isAdmin = false;
-            alert("લોગઆઉટ થઈ ગયું.");
             document.getElementById('loginBtn').innerHTML = '<i class="fas fa-lock"></i> એડમિન લોગિન';
             document.getElementById('adminSection').style.display = 'none';
             document.getElementById('adminBadge').style.display = 'none';
             updateDashboard();
         }
+    }
+
+    function switchTab(evt, tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).style.display = 'block';
+        evt.currentTarget.classList.add('active');
     }
 
     function deleteEntry(index) {
@@ -295,130 +389,110 @@
     }
 
     function updateDashboard() {
-        let income = 0;
-        let expense = 0;
+        let income = 0, expense = 0, totalBaki = 0;
+        const tBody = document.querySelector('#transactionTable tbody');
+        const jBody = document.querySelector('#jamaTable tbody');
+        const bBody = document.querySelector('#bakiTable tbody');
 
-        tableBody.innerHTML = '';
+        tBody.innerHTML = ''; jBody.innerHTML = ''; bBody.innerHTML = '';
 
-        // એડમિન કોલમ દર્શાવવી કે છુપાવવી
         const adminCols = document.querySelectorAll('.admin-col');
         adminCols.forEach(col => col.style.display = isAdmin ? 'table-cell' : 'none');
 
         transactions.forEach((item, index) => {
-            if(item.type === 'income') income += item.amount;
-            if(item.type === 'expense') expense += item.amount;
+            if(item.type === 'income') {
+                income += item.amount;
+                totalBaki += (item.bakiAmount || 0);
+            } else {
+                expense += item.amount;
+            }
 
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td style="color: ${item.type === 'income' ? 'green' : 'red'}; font-weight: bold;">
-                    ${item.type === 'income' ? 'આવક' : 'ખર્ચ'}
-                </td>
-                <td>${item.description}</td>
-                <td>₹${item.amount}</td>
-                ${isAdmin ? `<td><button class="delete-btn" onclick="deleteEntry(${index})"><i class="fas fa-trash"></i></button></td>` : ''}
-            `;
-            tableBody.appendChild(row);
+            // Tab 1 Row
+            tBody.innerHTML += `
+                <tr>
+                    <td style="color:${item.type === 'income' ? 'green':'red'}; font-weight:bold;">${item.type === 'income' ? 'આવક' : 'ખર્ચ'}</td>
+                    <td>${item.name ? item.name + ' (' + item.description + ')' : item.description}</td>
+                    <td>₹${item.amount}</td>
+                    ${isAdmin ? `<td class="admin-col"><button class="delete-btn" onclick="deleteEntry(${index})"><i class="fas fa-trash"></i></button></td>` : ''}
+                </tr>`;
+
+            // Tab 2 Row (Haribhakt Jama)
+            if(item.type === 'income' && item.name) {
+                jBody.innerHTML += `
+                    <tr>
+                        <td><b>${item.name}</b></td>
+                        <td>${item.description}</td>
+                        <td style="color:green; font-weight:bold;">₹${item.amount}</td>
+                        <td style="color:red;">₹${item.bakiAmount || 0}</td>
+                    </tr>`;
+            }
+
+            // Tab 3 Row (Baki Seva)
+            if(item.type === 'income' && item.bakiAmount > 0) {
+                bBody.innerHTML += `
+                    <tr>
+                        <td><b>${item.name}</b></td>
+                        <td>${item.description}</td>
+                        <td style="color:red; font-weight:bold;">₹${item.bakiAmount}</td>
+                    </tr>`;
+            }
         });
 
         document.getElementById('totalIncome').innerText = `₹${income}`;
         document.getElementById('totalExpense').innerText = `₹${expense}`;
         document.getElementById('netBalance').innerText = `₹${income - expense}`;
+        document.getElementById('totalPending').innerText = `₹${totalBaki}`;
 
         localStorage.setItem('rk_mandir_transactions', JSON.stringify(transactions));
     }
 
-    form.addEventListener('submit', function(e) {
+    document.getElementById('entryForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const type = document.getElementById('type').value;
+        const name = document.getElementById('haribhakatName').value;
         const description = document.getElementById('description').value;
-        const amount = parseFloat(document.getElementById('amount').value);
+        const amount = parseFloat(document.getElementById('amount').value) || 0;
+        const bakiAmount = parseFloat(document.getElementById('bakiAmount').value) || 0;
 
-        if(description && amount) {
-            transactions.push({ type, description, amount });
-            updateDashboard();
-            form.reset();
-            alert("એન્ટ્રી સફળતાપૂર્વક ઉમેરાઈ ગઈ!");
-        }
+        transactions.push({ type, name, description, amount, bakiAmount });
+        updateDashboard();
+        this.reset();
+        toggleInputs();
+        alert("એન્ટ્રી સેવ થઈ ગઈ!");
     });
 
-    // પ્રથમ લોડ પર ડેશબોર્ડ અપડેટ
+    function downloadPDF(type) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.setFontSize(14);
+
+        if(type === 'all') {
+            doc.text("Shree Radha Krishna Mandir - All Transactions", 14, 15);
+            doc.autoTable({
+                startY: 25,
+                head: [['Type', 'Details', 'Amount (Rs)']],
+                body: transactions.map(t => [t.type === 'income'?'Income':'Expense', t.name ? `${t.name} (${t.description})` : t.description, t.amount])
+            });
+        } else if(type === 'jama') {
+            doc.text("Haribhakt Seva Report", 14, 15);
+            doc.autoTable({
+                startY: 25,
+                head: [['Name', 'Details', 'Jama (Rs)', 'Baki (Rs)']],
+                body: transactions.filter(t => t.type === 'income' && t.name).map(t => [t.name, t.description, t.amount, t.bakiAmount || 0])
+            });
+        } else if(type === 'baki') {
+            doc.text("Pending Seva Report", 14, 15);
+            doc.autoTable({
+                startY: 25,
+                head: [['Name', 'Details', 'Pending Amount (Rs)']],
+                body: transactions.filter(t => t.type === 'income' && t.bakiAmount > 0).map(t => [t.name, t.description, t.bakiAmount])
+            });
+        }
+        doc.save(`${type}_report.pdf`);
+    }
+
+    toggleInputs();
     updateDashboard();
 </script>
-
 </body>
 </html>
-<!-- એડમિન એન્ટ્રી ફોર્મ -->
-<div id="adminForm" class="admin-panel" style="display:none;">
-    <h3>નવો વ્યવહાર ઉમેરો</h3>
-    
-    <label>વ્યવહારનો પ્રકાર:</label>
-    <select id="type" onchange="toggleHaribhakatFields()">
-        <option value="aavak">આવક (દાન / ફાળો)</option>
-        <option value="kharch">ખર્ચ</option>
-    </select>
-
-    <!-- હરિભગતની વિગત (માત્ર આવક માટે) -->
-    <div id="haribhakatGroup">
-        <label>હરિભગતનું નામ:</label>
-        <input type="text" id="haribhakatName" placeholder="દા.ત. રમેશભાઈ પટેલ">
-
-        <label>બાકી સેવા રકમ (₹):</label>
-        <input type="number" id="bakiRakam" placeholder="0" value="0">
-    </div>
-
-    <label>વિગત / વિષય:</label>
-    <input type="text" id="details" placeholder="દા.ત. અન્નકૂટ સેવા / રેતી">
-
-    <label>જમા / ખર્ચ રકમ (₹):</label>
-    <input type="number" id="amount" placeholder="500">
-
-    <button onclick="addTransaction()">ઉમેરો</button>
-</div>
-<!-- ટેબ બટન્સ -->
-<div class="tab-container">
-    <button class="tab-btn active" onclick="openTab('all')">તમામ વ્યવહારો</button>
-    <button class="tab-btn" onclick="openTab('haribhakat')">હરિભક્તોની સેવા</button>
-    <button class="tab-btn" onclick="openTab('baki')">બાકી સેવા</button>
-</div>
-
-<!-- ૧. તમામ વ્યવહારો ટેબલ -->
-<div id="tabAll" class="tab-content">
-    <table>
-        <thead>
-            <tr>
-                <th>પ્રકાર</th>
-                <th>વિગત</th>
-                <th>રકમ (₹)</th>
-            </tr>
-        </thead>
-        <tbody id="allTableBody"></tbody>
-    </table>
-</div>
-
-<!-- ૨. હરિભક્તોની સેવા ટેબલ -->
-<div id="tabHaribhakat" class="tab-content" style="display:none;">
-    <table>
-        <thead>
-            <tr>
-                <th>હરિભગતનું નામ</th>
-                <th>વિગત</th>
-                <th>જમા રકમ (₹)</th>
-            </tr>
-        </thead>
-        <tbody id="haribhakatTableBody"></tbody>
-    </table>
-</div>
-
-<!-- ૩. બાકી સેવા ટેબલ -->
-<div id="tabBaki" class="tab-content" style="display:none;">
-    <table>
-        <thead>
-            <tr>
-                <th>હરિભગતનું નામ</th>
-                <th>વિગત</th>
-                <th>બાકી રકમ (₹)</th>
-            </tr>
-        </thead>
-        <tbody id="bakiTableBody"></tbody>
-    </table>
-</div>
